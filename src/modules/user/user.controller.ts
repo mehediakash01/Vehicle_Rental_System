@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { pool } from "../../config/dB";
+import { userServices } from "./user.service";
 // create user
 const createUser = async (req: Request, res: Response) => {
   const { name, email, password, phone, role } = req.body;
@@ -14,10 +15,7 @@ const createUser = async (req: Request, res: Response) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   const fixedRole = role === "admin" ? "admin" : "customer";
   try {
-    const result = await pool.query(
-      `INSERT INTO users(name,email,password,phone,role) VALUES($1,$2,$3,$4,$5) RETURNING * `,
-      [name, loweredMail, hashedPassword, phone, fixedRole]
-    );
+    const result = await userServices.createUser(name,loweredMail,hashedPassword,phone,fixedRole);
 
     res.status(201).json({
       success: true,
