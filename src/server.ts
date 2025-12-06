@@ -12,8 +12,10 @@ const port = config.port
 app.use(express.json())
 // initializing database
 initDB();
-
+// user apis
 app.use("/users",userRoutes);
+
+
 
 app.get('/', (req:Request, res:Response) => {
   res.send('Ronaldo is the Goat!')
