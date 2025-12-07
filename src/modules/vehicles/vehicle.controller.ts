@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { pool } from "../../config/dB";
+import { vehicleServices } from "./vehicle.service";
 
 const createVehicle = async (req: Request, res: Response) => {
   try {
@@ -23,16 +24,11 @@ const createVehicle = async (req: Request, res: Response) => {
         : null;
     const availability =
       availability_status === "available" ? "available" : "booked";
-    const result = await pool.query(
-      `INSERT INTO vehicles(vehicle_name,type,registration_number,daily_rent_price,availability_status) VALUES($1,$2,$3,$4,$5) RETURNING*`,
-      [
-        vehicle_name,
+    const result = await vehicleServices.createVehicle( vehicle_name,
         vehicleType,
         registration_number,
         daily_rent_price,
-        availability,
-      ]
-    );
+        availability,)
 
     res.status(201).json({
       success: true,
