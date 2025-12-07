@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import { pool } from "../../config/dB";
+
 import { userServices } from "./user.service";
 // create user
 const createUser = async (req: Request, res: Response) => {

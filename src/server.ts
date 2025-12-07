@@ -11,13 +11,14 @@ import { vehicleRouter } from "./modules/vehicles/vehicle.routes";
 const app = express()
 const port = config.port
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
 // initializing database
 initDB();
 // user apis
 app.use("/users",userRoutes);
 
 // vehicle apis
-app.use("/api/v1",vehicleRouter)
+app.use("/api/v1/vehicles",vehicleRouter)
 
 app.get('/', (req:Request, res:Response) => {
   res.send('Ronaldo is the Goat!')
