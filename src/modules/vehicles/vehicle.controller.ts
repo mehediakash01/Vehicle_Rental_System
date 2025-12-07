@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { pool } from "../../config/dB";
+
 import { vehicleServices } from "./vehicle.service";
 
 const createVehicle = async (req: Request, res: Response) => {
@@ -11,7 +11,15 @@ const createVehicle = async (req: Request, res: Response) => {
       daily_rent_price,
       availability_status,
     } = req.body;
-   
+    if (daily_rent_price < 0) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "daily rental price must be positive",
+        });
+    }
+
     const vehicleType =
       type === "car"
         ? "car"
@@ -24,11 +32,13 @@ const createVehicle = async (req: Request, res: Response) => {
         : null;
     const availability =
       availability_status === "available" ? "available" : "booked";
-    const result = await vehicleServices.createVehicle( vehicle_name,
-        vehicleType,
-        registration_number,
-        daily_rent_price,
-        availability,)
+    const result = await vehicleServices.createVehicle(
+      vehicle_name,
+      vehicleType,
+      registration_number,
+      daily_rent_price,
+      availability
+    );
 
     res.status(201).json({
       success: true,
@@ -38,7 +48,6 @@ const createVehicle = async (req: Request, res: Response) => {
     });
   } catch (err: any) {
     res.status(500).json({
-      
       success: false,
       message: err.message,
     });
