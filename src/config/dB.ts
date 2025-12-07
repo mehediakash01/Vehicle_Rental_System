@@ -1,13 +1,12 @@
-
-import{ Pool} from "pg";
+import { Pool } from "pg";
 import config from ".";
 // Db
 export const pool = new Pool({
-connectionString :`${config.connection_str}`
-})
+  connectionString: `${config.connection_str}`,
+});
 
-const initDB  = async()=>{
-    await pool.query(`
+const initDB = async () => {
+  await pool.query(`
         
         CREATE TABLE IF NOT EXISTS users(
         id SERIAL PRIMARY KEY,
@@ -21,7 +20,7 @@ const initDB  = async()=>{
         
         )
         `);
-          await pool.query(`
+  await pool.query(`
         
         CREATE TABLE IF NOT EXISTS vehicles(
         id SERIAL PRIMARY KEY,
@@ -34,7 +33,24 @@ const initDB  = async()=>{
         updatedAt TIMESTAMP DEFAULT NOW()
         
         )
-        `)
+        `);
+  await pool.query(`
+        
+        CREATE TABLE IF NOT EXISTS bookings(
+        id SERIAL PRIMARY KEY,
+        customer_id INT REFERENCES users(id) ON DELETE CASCADE ,
+        vehicle_id INT REFERENCES vehicles(id) ON DELETE CASCADE ,
+    
+        rent_start_date TIMESTAMP  NOT NULL,
 
-}
+        rent_end_date TIMESTAMP NOT NULL,
+        total_price INT NOT NULL ,
+        status VARCHAR(50) NOT NULL,
+        createdAt TIMESTAMP DEFAULT NOW(),
+        updatedAt TIMESTAMP DEFAULT NOW()
+        
+        
+        )
+        `);
+};
 export default initDB;
