@@ -16,7 +16,13 @@ const createUser = async (req: Request, res: Response) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   const fixedRole = role === "admin" ? "admin" : "customer";
   try {
-    const result = await userServices.createUser(name,loweredMail,hashedPassword,phone,fixedRole);
+    const result = await userServices.createUser(
+      name,
+      loweredMail,
+      hashedPassword,
+      phone,
+      fixedRole
+    );
 
     res.status(201).json({
       success: true,
@@ -29,22 +35,42 @@ const createUser = async (req: Request, res: Response) => {
       message: err.message,
     });
   }
-}
+};
 // getting all user(only admin)
-const getUser = async(req:Request,res:Response)=>{
-  try{
-   const result = await userServices.getUser();
-   res.status(200).json({success:true,
-    message:"Users retrieved successfully",
-    data:result.rows
-  })
-
+const getUser = async (req: Request, res: Response) => {
+  try {
+    const result = await userServices.getUser();
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Users retrieved successfully",
+        data: result.rows,
+      });
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: err.message });
   }
-  catch(err:any){
-    res.status(500).json({success:false,message:err.message})
-
+};
+// update user by admin(can update role and details) or own profile(can update user details)
+const updateUser = async (req: Request, res: Response) => {
+  const { name, email, phone, role } = req.body;
+  // const hashedPassword = await bcrypt.hash(password, 10);
+  try {
+    const result = await pool.query(
+      `UPDATE users SET name=$1, email=$2, phone=$3, role=$4 WHERE id=$5 RETURNING *`,
+      [name,email, phone, role,req.params.id]
+    );
+    if (!result || result.rowCount==0){
+      return res.status(404).json({success:false,message:"user not found"});
+    }
+    res.status(200).json({
+      success:true,
+      message:"User updated successfully",
+      data:result.rows[0]
+    })
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: err.message });
   }
+};
 
-}
-
-export const userControllers = {createUser,getUser};
+export const userControllers = { createUser, getUser ,updateUser};
