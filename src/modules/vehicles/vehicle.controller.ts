@@ -92,7 +92,7 @@ const updatingVehicle = async (req: Request, res: Response) => {
   const {vehicleId} = req.params;
  
   try {
-    const result = await vehicleServices.updateVehicle(vehicle_name,type,registration_number,daily_rent_price,availability_status,vehicleId)
+    const result = await vehicleServices.updatingVehicle(vehicle_name,type,registration_number,daily_rent_price,availability_status,vehicleId)
     if (!result || result.rowCount==0){
       return res.status(404).json({success:false,message:"vehicle not found"});
     }
