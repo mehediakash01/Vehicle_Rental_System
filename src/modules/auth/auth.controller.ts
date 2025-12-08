@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
+import { authService } from "./auth.service";
 // create user
 const createUser = async (req: Request, res: Response) => {
   const { name, email, password, phone, role } = req.body;
@@ -13,7 +14,7 @@ const createUser = async (req: Request, res: Response) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   const fixedRole = role === "admin" ? "admin" : "customer";
   try {
-    const result = await authServices.createUser(
+    const result = await authService.createUser(
       name,
       loweredMail,
       hashedPassword,
