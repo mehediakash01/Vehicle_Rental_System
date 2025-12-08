@@ -79,17 +79,17 @@ const getBooking = async(req:Request,res:Response)=>{
 }
 const updateBooking = async (req: Request, res: Response) => {
   const { status } = req.body;
-  const {userId} = req.params;
+  const {bookingId} = req.params;
 
   try {
-    const result = await bookingService.updateBooking(status,userId)
+    const result = await bookingService.updateBooking(status,bookingId)
     if (!result || result.rowCount==0){
       return res.status(404).json({success:false,message:"booking not found"});
     }
     
     res.status(200).json({
       success:true,
-      message:status==="cancel"? "Booking cancelled successfully":"Booking marked as returned. Vehicle is now available"
+      message:status==="cancel"? "Booking cancelled successfully": status ==="returned"? "Booking marked as returned. Vehicle is now available" :"active",
 
       data:result.rows[0]
     })
