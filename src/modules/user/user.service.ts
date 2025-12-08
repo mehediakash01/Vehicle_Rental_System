@@ -22,7 +22,7 @@ const updateUser = async(name:string,email:string,phone:string,role:string,userI
     return result;
 
 }
-
+// delete user
 const deleteUser = async(userId:string|undefined)=>{
  const result =  await pool.query(`DELETE FROM users WHERE id=$1 RETURNING *`,[userId])
  return result;
