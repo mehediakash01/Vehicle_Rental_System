@@ -72,7 +72,7 @@ const getVehicle = async (req: Request, res: Response) => {
 const getSingleVehicle = async (req: Request, res: Response) => {
   const {vehicleId} = req.params;
   try {
-    const result = await vehicleServices.getVehicle();
+    const result = await vehicleServices.getSingleVehicle(vehicleId);
     res
       .status(200)
       .json({
