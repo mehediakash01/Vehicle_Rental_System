@@ -34,4 +34,9 @@ const createUser = async (req: Request, res: Response) => {
     });
   }
 };
- export const authController = {createUser,}
+// login user
+const loginUser = async(req:Request,res:Response)=>{
+  const {email,password} = req.body;
+
+}
+ export const authController = {createUser,loginUser}
