@@ -13,10 +13,10 @@ const getUser = async()=>{
   return result
 
 }
-const updateUser = async(name:string,email:string,phone:string,role:string,id:string|undefined)=>{
+const updateUser = async(name:string,email:string,phone:string,role:string,userId:string|undefined)=>{
   const result = await pool.query(
       `UPDATE users SET name=$1, email=$2, phone=$3, role=$4 WHERE id=$5 RETURNING *`,
-      [name,email, phone, role,id]
+      [name,email, phone, role,userId]
     );
     return result;
 

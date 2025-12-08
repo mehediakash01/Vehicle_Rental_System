@@ -54,10 +54,10 @@ const getUser = async (req: Request, res: Response) => {
 // update user by admin(can update role and details) or own profile(can update user details)
 const updateUser = async (req: Request, res: Response) => {
   const { name, email, phone, role } = req.body;
-  const {id} = req.params;
+  const {userId} = req.params;
   // const hashedPassword = await bcrypt.hash(password, 10);
   try {
-    const result = await userServices.updateUser(name,email,phone,role,id)
+    const result = await userServices.updateUser(name,email,phone,role,userId)
     if (!result || result.rowCount==0){
       return res.status(404).json({success:false,message:"user not found"});
     }
