@@ -1,5 +1,5 @@
 import { pool } from "../../config/dB";
-
+// creating vehicle
 const createVehicle = async (
   vehicle_name: string,
   vehicleType: string | null,
@@ -19,6 +19,13 @@ const createVehicle = async (
   );
   return result;
 };
+// getting all vehicle
+const getVehicle = async()=>{
+  const result = await  pool.query(`SELECT * FROM vehicles`);
+  return result
+
+}
 export const vehicleServices = {
   createVehicle,
+  getVehicle
 };
