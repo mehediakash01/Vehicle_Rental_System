@@ -11,6 +11,7 @@ import { bookingRoutes } from "./modules/bookings/booking.route";
 
 const app = express()
 const port = config.port
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 // initializing database
