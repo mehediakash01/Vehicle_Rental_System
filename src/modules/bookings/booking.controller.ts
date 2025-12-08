@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { pool } from "../../config/dB";
 import { bookingService } from "./booking.service";
-
+// creating bookings
 const createBooking = async (req: Request, res: Response) => {
   try {
     const { customer_id, vehicle_id, rent_start_date, rent_end_date } =
@@ -62,6 +62,22 @@ const createBooking = async (req: Request, res: Response) => {
     });
   }
 };
+// getting all booking by admin and own booking by customer
+const getBooking = async(req:Request,res:Response)=>{
+  try {
+      const result = await bookingService.getBooking();
+      res
+        .status(200)
+        .json({
+          success: true,
+          message: "Bookings retrieved successfully",
+          data: result.rows,
+        });
+    } catch (err: any) {
+      res.status(500).json({ success: false, message: err.message });
+    }
+}
 export const bookingController = {
   createBooking,
+  getBooking,
 };

@@ -75,6 +75,7 @@ const updateUser = async (req: Request, res: Response) => {
 const deleteUser = async (req: Request, res: Response) => {
 
   const {userId} = req.params;
+  const user = await pool.query(`SELECT `)
 
   try {
     const result = await userServices.deleteUser(userId)
