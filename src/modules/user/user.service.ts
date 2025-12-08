@@ -7,6 +7,12 @@ const createUser = async(name:string,loweredMail:string,hashedPassword:string,ph
         );
         return result;
 }
+const getUser = async()=>{
+  const result = await  pool.query(`SELECT * FROM users`);
+  return result
+
+}
 export const userServices = {
-    createUser
+    createUser,
+    getUser
 }

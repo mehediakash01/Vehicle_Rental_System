@@ -33,7 +33,7 @@ const createUser = async (req: Request, res: Response) => {
 // getting all user(only admin)
 const getUser = async(req:Request,res:Response)=>{
   try{
-   const result = await pool.query(`SELECT * FROM users`);
+   const result = await userServices.getUser();
    res.status(200).json({success:true,
     message:"Users retrieved successfully",
     data:result.rows
