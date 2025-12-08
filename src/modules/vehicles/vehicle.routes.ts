@@ -8,5 +8,7 @@ router.post("/",vehicleControllers.createVehicle)
 router.get("/",vehicleControllers.getVehicle)
 // getting single vehicle
 router.get("/:vehicleId",vehicleControllers.getSingleVehicle)
+// updating vehicle
+router.put("/:vehicleId",vehicleControllers.updatingVehicle)
 
 export const vehicleRouter = router;
