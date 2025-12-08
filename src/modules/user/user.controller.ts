@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 
 import { userServices } from "./user.service";
+import { pool } from "../../config/dB";
 // create user
 const createUser = async (req: Request, res: Response) => {
   const { name, email, password, phone, role } = req.body;
@@ -29,5 +30,21 @@ const createUser = async (req: Request, res: Response) => {
     });
   }
 }
+// getting all user(only admin)
+const getUser = async(req:Request,res:Response)=>{
+  try{
+   const result = await pool.query(`SELECT * FROM users`);
+   res.status(200).json({success:true,
+    message:"Users retrieved successfully",
+    data:result.rows
+  })
 
-export const userControllers = {createUser};
+  }
+  catch(err:any){
+    res.status(500).json({success:false,message:err.message})
+
+  }
+
+}
+
+export const userControllers = {createUser,getUser};

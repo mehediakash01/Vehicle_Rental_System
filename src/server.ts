@@ -17,7 +17,8 @@ app.use(express.urlencoded({ extended: true }));
 // initializing database
 initDB();
 // user apis
-app.use("/users",userRoutes);
+
+app.use("/api/v1/users",userRoutes)
 
 // vehicle apis
 app.use("/api/v1/vehicles",vehicleRouter)
