@@ -1,5 +1,5 @@
 import { pool } from "../../config/dB";
-
+// create booking logic
 const createBooking = async(customer_id:number,
         vehicle_id:number,
         rent_start_date:string,
@@ -20,6 +20,12 @@ const createBooking = async(customer_id:number,
     return result;
 
 }
+// getting booking logic
+const getBooking = async()=>{
+  const result = await pool.query(`SELECT * FROM bookings `);
+return result;
+}
 export const bookingService = {
     createBooking,
+    getBooking,
 }
