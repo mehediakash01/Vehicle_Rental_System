@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { pool } from "../../config/dB";
+import { bookingService } from "./booking.service";
 
 const createBooking = async (req: Request, res: Response) => {
   try {
@@ -40,17 +41,12 @@ const createBooking = async (req: Request, res: Response) => {
     const days = Math.ceil((endDate.getTime() - startDate.getTime()) / msInDay);
     const total_price = days * daily_rent_price;
 
-    const result = await pool.query(
-      `INSERT INTO bookings(customer_id, vehicle_id, rent_start_date, rent_end_date,total_price,status ) VALUES($1,$2,$3,$4,$5,$6) RETURNING *`,
-      [
-        customer_id,
+    const result = await bookingService.createBooking(customer_id,
         vehicle_id,
         rent_start_date,
         rent_end_date,
         total_price,
-        status,
-      ]
-    );
+        status)
     res.status(201).json({
       success: true,
       message: "Vehicle created successfully",
