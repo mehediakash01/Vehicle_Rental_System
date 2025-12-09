@@ -1,9 +1,11 @@
-import { Request, Response, Router } from "express";
+import {  Router } from "express";
 import { vehicleControllers } from "./vehicle.controller";
+import logger from "../../middleware/logger";
+import { auth } from "../../middleware/auth";
 
 const router = Router();
 // posting vehicle 
-router.post("/",vehicleControllers.createVehicle)
+router.post("/",logger,auth("admin"), vehicleControllers.createVehicle)
 // getting all vehicle
 router.get("/",vehicleControllers.getVehicle)
 // getting single vehicle
