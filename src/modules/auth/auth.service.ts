@@ -23,8 +23,8 @@ const loginUser = async (email:string,password:string)=>{
   if (!decodedPass){
     return false;
   }
-  const secret = "KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30"
-  const token = jwt.sign({name:user.name,email:user.email},secret,{ expiresIn:"7d"})
+  
+  const token = jwt.sign({name:user.name,email:user.email},config.jwt_secret as string,{ expiresIn:"7d"})
   console.log(token);
 
   return {token,user};
