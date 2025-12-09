@@ -11,7 +11,7 @@ router.get("/",vehicleControllers.getVehicle)
 // getting single vehicle
 router.get("/:vehicleId",vehicleControllers.getSingleVehicle)
 // updating vehicle
-router.put("/:vehicleId",vehicleControllers.updatingVehicle)
+router.put("/:vehicleId",logger,auth("admin"), vehicleControllers.updatingVehicle)
 // deleting vehicle
 router.delete("/:vehicleId",vehicleControllers.deleteVehicle)
 
