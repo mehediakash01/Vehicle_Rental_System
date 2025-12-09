@@ -5,7 +5,7 @@ import { auth } from "../../middleware/auth";
 
 const router = Router();
 
-router.get("/",logger,auth(), userControllers.getUser)
+router.get("/",logger,auth("admin"), userControllers.getUser)
 router.put("/:userId",userControllers.updateUser)
 router.delete("/:userId",userControllers.deleteUser)
 
