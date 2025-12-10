@@ -37,10 +37,10 @@ const updateUser = async (req: Request, res: Response) => {
     }
     let result;
     if (isAdmin){
-result = await userServices.updateUser(name,email,phone,role,userId)
+result = await userServices.updateUserByAdmin(name,email,phone,role,userId)
     }
     else{
-      result = await userServices.updateUser(name,email,phone,userId)
+      result = await userServices.updateOwnProfile(name,email,phone,userId)
 
     }
      

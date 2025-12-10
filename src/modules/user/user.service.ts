@@ -6,11 +6,20 @@ const getUser = async()=>{
   return result
 
 }
-// update user
-const updateUser = async(name:string,email:string,phone:string,role:string,userId:string|undefined)=>{
+// update user by admin
+const updateUserByAdmin = async(name:string,email:string,phone:string,role:string,userId:string|undefined)=>{
   const result = await pool.query(
       `UPDATE users SET name=$1, email=$2, phone=$3, role=$4 WHERE id=$5 RETURNING *`,
       [name,email, phone, role,userId]
+    );
+    return result;
+
+}
+// update users own profile
+const updateOwnProfile = async(name:string,email:string,phone:string,userId:string|undefined)=>{
+  const result = await pool.query(
+      `UPDATE users SET name=$1, email=$2, phone=$3 WHERE id=$4 RETURNING *`,
+      [name,email, phone,userId]
     );
     return result;
 
@@ -26,6 +35,7 @@ const deleteUser = async(userId:string|undefined)=>{
 export const userServices = {
    
     getUser,
-    updateUser,
+    updateUserByAdmin,
+    updateOwnProfile,
     deleteUser
 }
