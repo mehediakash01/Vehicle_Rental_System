@@ -13,6 +13,6 @@ router.get("/:vehicleId",vehicleControllers.getSingleVehicle)
 // updating vehicle
 router.put("/:vehicleId",logger,auth("admin"), vehicleControllers.updatingVehicle)
 // deleting vehicle
-router.delete("/:vehicleId",vehicleControllers.deleteVehicle)
+router.delete("/:vehicleId",logger,auth("admin"),vehicleControllers.deleteVehicle)
 
 export const vehicleRouter = router;

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 
 import { vehicleServices } from "./vehicle.service";
+import { pool } from "../../config/dB";
 // posting vehicle
 const createVehicle = async (req: Request, res: Response) => {
   try {
@@ -105,32 +106,55 @@ const updatingVehicle = async (req: Request, res: Response) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
-
-// Delete vehicle by only admin and delete only if no bookings is active by the user
-
+// deleting booking only by admin and only when vehicle is not active
 const deleteVehicle = async (req: Request, res: Response) => {
-
-  const {vehicleId} = req.params;
-  
+  const { vehicleId } = req.params;
 
   try {
-    const result = await vehicleServices.deleteVehicle(vehicleId)
-    if (!result || result.rowCount===0){
-      return res.status(404).json({success:false,message:"vehicle not found"});
-    }
-   else{
-    res.status(200).json({
-      success:true,
-      message:"vehicle Deleted successfully",
-      data:null
-    })
 
-   } 
+    const booking = await pool.query(
+      `SELECT * FROM bookings WHERE vehicle_Id=$1`, 
+      [vehicleId]
+    );
+
+    
+    if (booking.rows.length > 0) {
+   
+      const hasActiveBooking = booking.rows.some(row => row.status === "active");
+      
+      if (hasActiveBooking) {
+        const activeBooking = booking.rows.find(row => row.status === "active");
+        return res.status(400).json({
+          success: false,
+          message: "Can't delete, has active bookings",
+          activeBooking: {
+            id: activeBooking.id,
+            status: activeBooking.status
+          }
+        });
+      }
+    }
+
+    
+    const result = await vehicleServices.deleteVehicle(vehicleId);
+    
+    if (!result || result.rowCount === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Vehicle not found"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Vehicle deleted successfully",
+      data: null
+    });
+
   } catch (err: any) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
-
 export const vehicleControllers = {
   createVehicle,
   getVehicle,
