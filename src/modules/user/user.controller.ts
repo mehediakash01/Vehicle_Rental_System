@@ -23,9 +23,27 @@ const getUser = async (req: Request, res: Response) => {
 const updateUser = async (req: Request, res: Response) => {
   const { name, email, phone, role } = req.body;
   const {userId} = req.params;
+  const requestingUser = req.user;
 
   try {
-    const result = await userServices.updateUser(name,email,phone,role,userId)
+
+    const isAdmin = requestingUser?.role==="admin";
+    const isOwnProfile = requestingUser?.id===userId;
+    if (!isAdmin && !isOwnProfile) {
+      return res.status(403).json({
+        success: false,
+        message: "You can only update your own profile"
+      });
+    }
+    let result;
+    if (isAdmin){
+result = await userServices.updateUser(name,email,phone,role,userId)
+    }
+    else{
+      result = await userServices.updateUser(name,email,phone,userId)
+
+    }
+     
     if (!result || result.rowCount==0){
       return res.status(404).json({success:false,message:"user not found"});
     }
