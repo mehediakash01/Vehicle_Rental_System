@@ -6,7 +6,7 @@ import { auth } from "../../middleware/auth";
 const router = Router();
 
 router.get("/",logger,auth("admin"), userControllers.getUser)
-router.put("/:userId",userControllers.updateUser)
+router.put("/:userId",auth("admin","customer"),userControllers.updateUser)
 router.delete("/:userId",userControllers.deleteUser)
 
 export const userRoutes = router;

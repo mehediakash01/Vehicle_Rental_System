@@ -23,7 +23,7 @@ const getUser = async (req: Request, res: Response) => {
 const updateUser = async (req: Request, res: Response) => {
   const { name, email, phone, role } = req.body;
   const {userId} = req.params;
-  // const hashedPassword = await bcrypt.hash(password, 10);
+
   try {
     const result = await userServices.updateUser(name,email,phone,role,userId)
     if (!result || result.rowCount==0){
