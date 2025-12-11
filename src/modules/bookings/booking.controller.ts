@@ -89,29 +89,71 @@ const createBooking = async (req: Request, res: Response) => {
   }
 };
 // getting all booking by admin and own booking by customer
-// getting all booking by admin and own booking by customer
+
 const getBooking = async (req: Request, res: Response) => {
   const requestingUser = req.user;
   const isAdmin = requestingUser?.role === "admin";
   const customerId = requestingUser?.id;
 
+
   try {
     let result;
 
-    // Admin gets ALL bookings
+    let formattedData= [];
+    // Admin gets ALL bookings with customer and vehicle info
     if (isAdmin) {
       result = await bookingService.getAllBookings();
+      
+      // Format for admin view
+      formattedData = result.rows.map((booking) => ({
+        id: booking.id,
+        customer_id: booking.customer_id,
+        vehicle_id: booking.vehicle_id,
+        rent_start_date: booking.rent_start_date,
+        rent_end_date: booking.rent_end_date,
+        total_price: booking.total_price,
+        status: booking.status,
+        customer: {
+          name: booking.customer_name,
+          email: booking.customer_email,
+        },
+        vehicle: {
+          vehicle_name: booking.vehicle_name,
+          registration_number: booking.registration_number,
+        },
+      }));
+
+      return res.status(200).json({
+        success: true,
+        message: "Bookings retrieved successfully",
+        data: formattedData,
+      });
     } 
-    // Customer gets ONLY their bookings
+    // Customer gets ONLY their bookings with vehicle info
     else {
       result = await bookingService.getBookingsByCustomer(customerId);
-    }
+      
+      // Format for customer view
+      formattedData = result.rows.map((booking) => ({
+        id: booking.id,
+        vehicle_id: booking.vehicle_id,
+        rent_start_date: booking.rent_start_date,
+        rent_end_date: booking.rent_end_date,
+        total_price: booking.total_price,
+        status: booking.status,
+        vehicle: {
+          vehicle_name: booking.vehicle_name,
+          registration_number: booking.registration_number,
+          type: booking.type,
+        },
+      }));
 
-    res.status(200).json({
-      success: true,
-      message: "Bookings retrieved successfully",
-      data: result.rows,
-    });
+      return res.status(200).json({
+        success: true,
+        message: "Your bookings retrieved successfully",
+        data: formattedData,
+      });
+    }
 
   } catch (err: any) {
     res.status(500).json({ success: false, message: err.message });
