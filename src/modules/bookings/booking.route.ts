@@ -5,6 +5,6 @@ import { auth } from "../../middleware/auth";
 
 const router = Router();
 router.post("/",logger,auth("admin","customer"),bookingController.createBooking);
-router.get("/",bookingController.getBooking);
+router.get("/",logger,auth("admin","customer"),bookingController.getBooking);
 router.put("/:bookingId",bookingController.updateBooking);
 export const bookingRoutes = router;
