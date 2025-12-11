@@ -15,27 +15,53 @@ const createBooking = async (req: Request, res: Response) => {
         success: false,
         message: "rent_end_date must be after rent_start_date",
       });
+
     }
+    // check if customer exists
+      const customerCheck = await pool.query(
+      "SELECT id FROM users WHERE id = $1",
+      [customer_id]
+    );
+
+    if (customerCheck.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Customer not found",
+      });
+    }
+    
     //   getting single vehicle
     const vehicleResult = await pool.query(
-      "SELECT vehicle_name, daily_rent_price FROM vehicles WHERE id=$1",
+      "SELECT vehicle_name, daily_rent_price,availability_status FROM vehicles WHERE id=$1",
       [vehicle_id]
     );
+    // check if vehicle exists
+       if (vehicleResult.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Vehicle not found",
+      });
+    }
+      const vehicle = vehicleResult.rows[0];
+    const { daily_rent_price, vehicle_name,availability_status } = vehicle;
+
+    // check if vehicle already booked
+     if (availability_status === "booked") {
+      return res.status(400).json({
+        success: false,
+        message: "Vehicle is already booked",
+      });
+    }
+
     // update vehicle status
     await pool.query(
       `UPDATE vehicles SET availability_status = 'booked', updatedAt = NOW() WHERE id = $1`,
       [vehicle_id]
     );
 
-    if (vehicleResult.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "Vehicle not found",
-      });
-    }
+ 
 
-    const vehicle = vehicleResult.rows[0];
-    const { daily_rent_price, vehicle_name } = vehicle;
+  
 
     const msInDay = 1000 * 60 * 60 * 24;
     const days = Math.ceil((endDate.getTime() - startDate.getTime()) / msInDay);
