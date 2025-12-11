@@ -89,20 +89,34 @@ const createBooking = async (req: Request, res: Response) => {
   }
 };
 // getting all booking by admin and own booking by customer
-const getBooking = async(req:Request,res:Response)=>{
+// getting all booking by admin and own booking by customer
+const getBooking = async (req: Request, res: Response) => {
+  const requestingUser = req.user;
+  const isAdmin = requestingUser?.role === "admin";
+  const customerId = requestingUser?.id;
+
   try {
-      const result = await bookingService.getBooking();
-      res
-        .status(200)
-        .json({
-          success: true,
-          message: "Bookings retrieved successfully",
-          data: result.rows,
-        });
-    } catch (err: any) {
-      res.status(500).json({ success: false, message: err.message });
+    let result;
+
+    // Admin gets ALL bookings
+    if (isAdmin) {
+      result = await bookingService.getAllBookings();
+    } 
+    // Customer gets ONLY their bookings
+    else {
+      result = await bookingService.getBookingsByCustomer(customerId);
     }
-}
+
+    res.status(200).json({
+      success: true,
+      message: "Bookings retrieved successfully",
+      data: result.rows,
+    });
+
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
 const updateBooking = async (req: Request, res: Response) => {
   const { status } = req.body;
   const {bookingId} = req.params;
