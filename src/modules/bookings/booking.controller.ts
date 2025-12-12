@@ -102,6 +102,7 @@ const getBooking = async (req: Request, res: Response) => {
     let formattedData= [];
     // Admin gets ALL bookings with customer and vehicle info
     if (isAdmin) {
+     await bookingService.autoReturnExpiredBookings();
       result = await bookingService.getAllBookings();
       
       // Format for admin view
@@ -131,6 +132,7 @@ const getBooking = async (req: Request, res: Response) => {
     } 
     // Customer gets ONLY their bookings with vehicle info
     else {
+       await bookingService.autoReturnExpiredBookings();
       result = await bookingService.getBookingsByCustomer(customerId);
       
       // Format for customer view

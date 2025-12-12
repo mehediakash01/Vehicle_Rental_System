@@ -65,6 +65,29 @@ const getBookingsByCustomer = async (customerId: number|undefined) => {
   );
   return result;
 };
+// handling autoReturn logic on expired date
+const autoReturnExpiredBookings = async () => {
+  // Update expired bookings
+  await pool.query(`
+    UPDATE bookings
+    SET status = 'returned', updatedAt = NOW()
+    WHERE rent_end_date < NOW()
+    AND status != 'returned';
+  `);
+
+  // Updating vehicle availability based on returned bookings
+  await pool.query(`
+    UPDATE vehicles
+    SET availability_status = 'available', updatedAt = NOW()
+    WHERE id IN (
+      SELECT vehicle_id 
+      FROM bookings 
+      WHERE rent_end_date < NOW()
+      AND status = 'returned'
+    );
+  `);
+};
+
 // update booking
 const updateBooking = async (status: string, bookingId: string|undefined) => {
   const result = await pool.query(
@@ -92,6 +115,7 @@ export const bookingService = {
     createBooking,
   getAllBookings,
   getBookingsByCustomer,
+  autoReturnExpiredBookings,
    updateBooking,
    updateVehicleStatus
 }
