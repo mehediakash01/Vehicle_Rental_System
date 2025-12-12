@@ -1,5 +1,11 @@
 import { pool } from "../../config/dB";
-
+type UpdateUserInput = {
+  name?: string;
+  email?: string;
+  password?: string;
+  phone?: string;
+  role?: string;
+};
 // get all user
 const getUser = async()=>{
   const result = await  pool.query(`SELECT * FROM users`);
