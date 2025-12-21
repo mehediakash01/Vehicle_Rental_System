@@ -32,6 +32,7 @@ app.get('/', (req:Request, res:Response) => {
   res.send('Ronaldo is the Goat!')
 })
 
-app.listen(port, () => {
-  console.log(`vehicle Running on port ${port}`)
-})
+// app.listen(port, () => {
+//   console.log(`vehicle Running on port ${port}`)
+// })
+export default app;

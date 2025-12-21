@@ -1,6 +1,6 @@
 # Vehicle Rental System
 
-**Live URL:** *https://vehicle-rental-ronsiuuuu-akashs-projects-b1d54e9d.vercel.app/*
+**Live URL:** *https://vehicle-rental-hazel.vercel.app/*
 
 - **Admin**
   - Email: `bale@gmail.com`
